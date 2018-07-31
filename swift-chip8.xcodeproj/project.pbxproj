@@ -20,6 +20,7 @@
 		2247C70E210CF66E00729657 /* Ram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2247C70D210CF66E00729657 /* Ram.swift */; };
 		224B7C6B210E10520083E7ED /* VMScreenRenderLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224B7C6A210E10520083E7ED /* VMScreenRenderLayer.swift */; };
 		224B7C8F210E7E4F0083E7ED /* ROMDropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224B7C8E210E7E4F0083E7ED /* ROMDropView.swift */; };
+		2278A14A2110D47D0075F607 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278A1492110D47D0075F607 /* Key.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		2247C70D210CF66E00729657 /* Ram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ram.swift; sourceTree = "<group>"; };
 		224B7C6A210E10520083E7ED /* VMScreenRenderLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMScreenRenderLayer.swift; sourceTree = "<group>"; };
 		224B7C8E210E7E4F0083E7ED /* ROMDropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ROMDropView.swift; sourceTree = "<group>"; };
+		2278A1492110D47D0075F607 /* Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 				2247C709210CF57B00729657 /* VirtualMachine.swift */,
 				2247C70B210CF5A800729657 /* Rom.swift */,
 				2247C70D210CF66E00729657 /* Ram.swift */,
+				2278A1492110D47D0075F607 /* Key.swift */,
 			);
 			path = VirtualMachine;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 				2247C6ED210CBD5700729657 /* ViewController.swift in Sources */,
 				224B7C8F210E7E4F0083E7ED /* ROMDropView.swift in Sources */,
 				2247C6EB210CBD5700729657 /* AppDelegate.swift in Sources */,
+				2278A14A2110D47D0075F607 /* Key.swift in Sources */,
 				2247C70A210CF57B00729657 /* VirtualMachine.swift in Sources */,
 				2247C70E210CF66E00729657 /* Ram.swift in Sources */,
 				2247C707210CF10500729657 /* Register.swift in Sources */,

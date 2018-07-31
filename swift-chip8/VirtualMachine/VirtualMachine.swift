@@ -32,17 +32,24 @@ final class VirtualMachine {
     private var queue = DispatchQueue(label: "com.VirtualMachine", qos: DispatchQoS.userInteractive)
     private var delayTimer: Timer?
     private var isRunning = false
+    private var pressedKeys = Set<Key>()
 
     // MARK: - Init
     
     init(rom: Rom) {
         ram.replaceSubrange(512 ... 512 + rom.count, with: rom)
-        
-
     }
     
     // MARK: - Instance Methods
-    
+
+    func press(key: Key) {
+        pressedKeys.insert(key)
+    }
+
+    func unpress(key: Key) {
+        pressedKeys.remove(key)
+    }
+
     func start() {
         isRunning = true
         startTimers()
@@ -63,6 +70,7 @@ final class VirtualMachine {
     private func startTimers() {
         delayTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { [weak self] timer in
             self?.decrementDelayTimer()
+            self?.decrementSoundTimer()
         }
     }
 
@@ -74,6 +82,12 @@ final class VirtualMachine {
     private func decrementDelayTimer() {
         if delayCounter > 0 {
             delayCounter = delayCounter - 1
+        }
+    }
+
+    private func decrementSoundTimer() {
+        if soundTimer > 0 {
+            soundTimer = soundTimer - 1
         }
     }
     
@@ -103,6 +117,11 @@ final class VirtualMachine {
         var shouldIncrementProgramCounter = true
         
         switch opcode {
+        case .awaitKeyPress(let register):
+            if let key = Key(rawValue: registers[Int(register)]) {
+                shouldIncrementProgramCounter = pressedKeys.contains(key)
+            }
+
         case .clearScreen:
             screen = .init(repeating: 0, count: 2048)
             
@@ -188,7 +207,32 @@ final class VirtualMachine {
             let lhsValue = registers[Int(lhsRegister)]
             let rhsValue = registers[Int(rhsRegister)]
             registers[Int(lhsRegister)] = lhsValue & rhsValue
-                        
+
+        case .skipNextIfKeyPressed(let register):
+            if let key = Key(rawValue: registers[Int(register)]),
+                pressedKeys.contains(key) {
+                incrementProgramCounter()
+            }
+
+        case .skipNextIfKeyNotPressed(let register):
+            if let key = Key(rawValue: registers[Int(register)]),
+                !pressedKeys.contains(key) {
+                incrementProgramCounter()
+            }
+
+        case .setSoundTimer(let register):
+            soundTimer = registers[Int(register)]
+
+        case .xor(let lhsRegister, let rhsRegister):
+            let lhsValue = registers[Int(lhsRegister)]
+            let rhsValue = registers[Int(rhsRegister)]
+            registers[Int(lhsRegister)] = lhsValue ^ rhsValue
+
+        case .or(let lhsRegister, let rhsRegister):
+            let lhsValue = registers[Int(lhsRegister)]
+            let rhsValue = registers[Int(rhsRegister)]
+            registers[Int(lhsRegister)] = lhsValue | rhsValue
+
         default:
             print("\(opcode) not implemented")
         }

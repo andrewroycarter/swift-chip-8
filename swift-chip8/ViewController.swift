@@ -15,17 +15,56 @@ final class ViewController: NSViewController, ROMDropViewDelegate {
     @IBOutlet private var dropView: ROMDropView!
     private var machine: VirtualMachine?
     private let renderLayer = VMScreenRenderLayer()
-    
+
+    override var acceptsFirstResponder: Bool {
+        return true
+    }
+
     // MARK: - Overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         embedRenderLayer()
+        addEventListeners()
+    }
+
+    override func keyDown(with event: NSEvent) {
+        super.keyDown(with: event)
+
+        guard let character = event.charactersIgnoringModifiers?.first.map(String.init),
+        let key = Key(string: character) else {
+            return
+        }
+
+        machine?.press(key: key)
+    }
+
+    override func keyUp(with event: NSEvent) {
+        super.keyUp(with: event)
+
+        guard let character = event.charactersIgnoringModifiers?.first.map(String.init),
+            let key = Key(string: character) else {
+                return
+        }
+
+        machine?.unpress(key: key)
     }
     
     // MARK: - Instance Methods
-    
+
+    private func addEventListeners() {
+        NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { event -> NSEvent? in
+            self.keyDown(with: event)
+            return event
+        }
+
+        NSEvent.addLocalMonitorForEvents(matching: [.keyUp]) { event -> NSEvent? in
+            self.keyUp(with: event)
+            return event
+        }
+    }
+
     private func setupVirtualMachine(rom: URL) {
         do {
             let data = try Data(contentsOf: rom)
