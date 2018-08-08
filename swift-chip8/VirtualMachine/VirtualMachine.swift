@@ -23,7 +23,8 @@ final class VirtualMachine {
     
     private var ram = Data(count: 4096)
     private var index: Address = 0x000000
-    private var stack: Address = 0x000EA0
+    private var stack: [UInt16] = .init(repeating: 0, count: 16)
+    private var stackPointer: Int = 0
     private var programCounter: Address = 0x000200
     private var soundTimer: Constant = 0
     private var delayCounter: Constant = 0
@@ -233,6 +234,24 @@ final class VirtualMachine {
             let rhsValue = registers[Int(rhsRegister)]
             registers[Int(lhsRegister)] = lhsValue | rhsValue
 
+        case .callSubroutine(let address):
+            stack[stackPointer] = programCounter
+            stackPointer += 1
+            programCounter = address
+            shouldIncrementProgramCounter = false
+            
+        case .return:
+            stackPointer -= 1
+            programCounter = stack[stackPointer]
+            
+        case .setShiftingRight(let lhsRegister, let rhsRegister):
+            let rhsValue = registers[Int(rhsRegister)]
+            registers[Int(lhsRegister)] = rhsValue >> 1
+            
+        case .setShiftingLeft(let lhsRegister, let rhsRegister):
+            let rhsValue = registers[Int(rhsRegister)]
+            registers[Int(lhsRegister)] = rhsValue << 1
+            
         default:
             print("\(opcode) not implemented")
         }
